@@ -2,10 +2,24 @@
 
 import sys
 import os
+import errno    
+import os
+from fichier import Fichier
+
+def mkdir_p(path):
+        try:
+             os.makedirs(path)
+        except OSError as exc:  # Python ≥ 2.5
+             if exc.errno == errno.EEXIST and os.path.isdir(path):
+                 pass
+                 # possibly handle other errno cases here, otherwise finally:
+             else:
+                 raise
 print(sys.argv[1])
 
 
 filename=sys.argv[1].lower()
+mkdir_p(filename)
 myclass=(filename).capitalize()
 modelname=(filename).capitalize()
 marouteget="\"/%s\"" % filename
@@ -103,6 +117,62 @@ mystr+="""        self.cur.execute("delete from {filename} where id = ?",(myid,)
 
 
 """
+model="""    def new{filename}(self,search={}):
+        return self.render_figure.render_figure("{filename}/new.html")
+    def create{filename}(self,params={}):
+        myparams=self.get_post_data()(params=("content",))
+        self.user=self.db{myclass}.create(myparams)
+        if self.user["{filename}_id"]:
+            self.set_notice(self.user["notice"])
+            self.set_json("{\"redirect\":\"/seemy{filename}/"+self.user["{filename}_id"]+"\"}")
+        else:
+            self.set_json("{\"redirect\":\"/new{filename}\"}")
+            return self.render_figure.render_json()
+    def show{filename}(self,params={}):
+        print("action see my new")
+        getparams=("id",)
+        print("get param, action see my storage",getparams)
+        myparam=self.get_this_route_param(getparams,params)
+        print("m params see my new")
+        print(myparam)
+        self.render_figure.set_param("{filename}",self.db{myclass}.getbyid(myparam["id"]))
+        return self.render_figure.render_figure("{filename}/show.html")
+    def all{filename}s(self,params={}):
+        self.render_figure.set_param("mystorages",self.db{myclass}.getall())
+        return self.render_figure.render_figure("data/all.html")
+"""
+mesroutes="""                    "^/new{filename}$":self.new{filename},
+                    "^/create{filename}$":self.create{filename},
+                                        "^/seemy{filename}/([0-9]+)$":self.show{filename},
+                                                            "^/all{filename}$":self.all{filename}s,
+"""
+matableinit="""        self.db{myclass}={myclass}()
+"""
+myimport="""from {filename} import {myclass}
+"""
+viewmymodel="""<p><%=news["content"]%></p>
+"""
+Fichier("./"+filename, "_"+filename+".html").ecrire(viewmymodel)
+seeallmode="""<h1>toutes les breaking news</h1>
+<%=render_collection(collection=params['mynews'], partial='news/_news.html', as_='news')%>
+"""
+Fichier("./"+filename, "voirtout.html").ecrire(newmodel)
+newmodel="""<h1>ecrire 1 breaking news</h1>
+<form action="/createnew" method="post">
+<div class="field">
+<label for="content">content</label>
+<textarea name="content" id="content"></textarea>
+</div>
+<div class="field">
+<label for="lat">latitude</label>
+<input type="text" name="lat" id="lat"/>
+</div>
+<div class="action">
+<input type="submit" value="submit" name="submit"/>
+</div>
+</form>
+"""
+Fichier("./"+filename, "new.html").ecrire(newmodel)
 if not os.path.isfile(filename+".py"):
   f = open(filename+".py", "w") 
   res=(mystr.format(modelname=modelname,filename=filename,columns=columns,values=values,myhash={},notice={}))
@@ -111,12 +181,16 @@ if not os.path.isfile(filename+".py"):
   f.close()
 
 
+
+
+index=[i for i in range(len(contents)) if "def run" in contents[i]][0]
+contents.insert((index), model.format(myfavdirectory=myfavdirectory,myclass=filename,myhtml=myhtml))
+indexinittable=[i for i in range(len(contents)) if "__init__" in contents[i]][0]
+contents.insert((indexroute+1), matableinit.format(myfavdirectory=myfavdirectory,myclass=filename,myhtml=myhtml))
+indexroute=[i for i in range(len(contents)) if "ROUTES={" in contents[i]][0]
+contents.insert((indexroute+1), mesroutes.format(filename=filename, myclass=myclass))
 with open("./route.py", "r") as f:
   contents = f.readlines()
-
-
-#index=[i for i in range(len(contents)) if "class S(BaseHTTPRequestHandler):" in contents[i]][0]
-#contents.insert(index, scriptfunc.format(myfavdirectory=myfavdirectory,myclass=filename,myhtml=myhtml))
 #contents.insert(1, "global {myclass}\n".format(myclass=filename))
 #contents.insert(1, "import {myclass}\n".format(myclass=filename))
 #contents.insert(1, "from {myclass} import {myclass}page\n".format(myclass=filename))

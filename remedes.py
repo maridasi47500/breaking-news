@@ -11,6 +11,8 @@ class Remedes(Model):
         self.cur.execute("""create table if not exists remedes(
         id integer primary key autoincrement,
         nom text,
+        lat text,
+        lon text,
             image text
                     );""")
         self.con.commit()
@@ -50,13 +52,13 @@ class Remedes(Model):
         print(myhash,myhash.keys())
         myid=None
         try:
-          self.cur.execute("insert into remedes (nom,image) values (:nom,:image)",myhash)
+          self.cur.execute("insert into remedes (nom,lat,lon) values (:nom,:lat,:lon)",myhash)
           self.con.commit()
           myid=str(self.cur.lastrowid)
         except Exception as e:
           print("my error"+str(e))
         azerty={}
-        azerty["remedes_id"]=myid
+        azerty["remede_id"]=myid
         azerty["notice"]="votre remedes a été ajouté"
         return azerty
 

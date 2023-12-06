@@ -10,3 +10,7 @@ class Fichier:
     print(self.path+"/"+self.name)
     j=open(self.path+"/"+self.name, "rb")
     return j.read()
+  def ecrire(self,mycontent):
+    fichier=open(self.path+"/"+self.name,"a")
+    fichier.write(mycontent)
+    fichier.close()

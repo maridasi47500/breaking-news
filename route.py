@@ -98,15 +98,15 @@ class Route():
         return self.render_figure.render_figure("welcome/edituser.html")
     #remedes
     def newremede(self,search={}):
-        return self.render_figure.render_figure("news/new.html")
+        return self.render_figure.render_figure("remede/new.html")
     def createremede(self,params={}):
-        myparams=self.get_post_data()(params=("content",))
-        self.user=self.dbNews.create(myparams)
-        if self.user["news_id"]:
+        myparams=self.get_post_data()(params=("nom","lat","lon",))
+        self.user=self.dbRemedes.create(myparams)
+        if self.user["remede_id"]:
           self.set_notice(self.user["notice"])
-          self.set_json("{\"redirect\":\"/seemynews/"+self.user["news_id"]+"\"}")
+          self.set_json("{\"redirect\":\"/seemyremede/"+self.user["remede_id"]+"\"}")
         else:
-          self.set_json("{\"redirect\":\"/new\"}")
+          self.set_json("{\"redirect\":\"/newremede\"}")
         return self.render_figure.render_json()
     def showremede(self,params={}):
         print("action see my new")
@@ -115,8 +115,8 @@ class Route():
         myparam=self.get_this_route_param(getparams,params)
         print("m params see my new")
         print(myparam)
-        self.render_figure.set_param("storage",self.dbStorage.getbyid(myparam["id"]))
-        return self.render_figure.render_figure("data/show.html")
+        self.render_figure.set_param("remede",self.dbRemedes.getbyid(myparam["id"]))
+        return self.render_figure.render_figure("remede/show.html")
     def allremedes(self,params={}):
         self.render_figure.set_param("mystorages",self.dbStorage.getall())
         return self.render_figure.render_figure("data/all.html")
@@ -205,8 +205,8 @@ class Route():
             ROUTES={
                     "^/newremede$":self.newremede,
                     "^/createremede$":self.createremede,
-                    "^/myremede/([0-9]+)$":self.showremede,
-                    "^/allremede$":self.allremedes,
+                    "^/seemyremede/([0-9]+)$":self.showremede,
+                    "^/allremedes$":self.allremedes,
                     "^/datastorage$":self.new_datastorage,
                     "^/new_datastorage$":self.datastorage,
                     "^/allmynews$":self.mynews,
