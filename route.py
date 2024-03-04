@@ -57,8 +57,7 @@ class Route():
         search=self.get_post_data()(params=("email","password"))
         self.user=self.dbUsers.getbyemailpw(search["email"],search["password"])
         print("user trouve", self.user)
-        if self.user["email"]:
-          self.set_session(self.user)
+        if self.user["email"] != "":
           self.set_session(self.user)
           self.set_json("{\"redirect\":\"/welcome\"}")
         else:
@@ -68,7 +67,7 @@ class Route():
     def datastorage(self,search={}):
         return self.render_figure.render_figure("data/new.html")
     def new_datastorage(self,params={}):
-        myparams=self.get_post_data()(params=("name","description",))
+        myparams=self.get_post_data()(params=("text","lat","lon","image",))
         self.user=self.dbStorage.create(myparams)
         if self.user["storage_id"]:
           self.set_notice(self.user["notice"])
@@ -185,7 +184,7 @@ class Route():
     def voirtoutcequejaiajoute(self,data):
 
         print("tout")
-        tout=self.dbNews.getall()+self.dbStorage.getall()
+        tout=self.dbNews.getall()+self.dbStorage.getall()+self.dbRemedes.getall()
         print("tout")
         print(tout,"tout")
         self.render_figure.set_param("tout",tout)
@@ -205,6 +204,9 @@ class Route():
         if not self.render_figure.partie_de_mes_mots(balise="section",text=self.Program.get_title()):
             self.render_figure.ajouter_a_mes_mots(balise="section",text=self.Program.get_title())
         if path and path.endswith("jpg"):
+            self.Program=Pic(path)
+            self.Program.set_path("./")
+        elif path and path.endswith("png"):
             self.Program=Pic(path)
             self.Program.set_path("./")
         elif path and path.endswith(".jfif"):

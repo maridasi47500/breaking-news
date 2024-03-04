@@ -1,6 +1,16 @@
   
 
 var theme = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
+const LeafIcon = L.Icon.extend({
+			options: {
+							iconSize:     [95, 95],
+							shadowSize:   [50, 54],
+							iconAnchor:   [50, 50],
+							shadowAnchor: [50, 62],
+							popupAnchor:  [25, 25]
+						}
+		});
+
     var lat = 8.619543;
         var lon = 0.82;
             var alt =481;
@@ -40,6 +50,7 @@ var theme = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
 	       var marker = L.marker(e.latlng).addTo(macarte)
 	       mylat.value=e.latlng.lat;
 	       mylon.value=e.latlng.lng;
+	       console.log(e.latlng);
 	   }
    }
 
@@ -48,6 +59,27 @@ var theme = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
 
                                                                                                                                                                                                       $(document).ready(function(){
                                                                                                                                                                                                               initMap();
-                                              if (window.location.href==="/"){
+                                              if (window.location.pathname==="/"){
+						      $.ajax({
+							      url:"/voirtoutcequejaiajoute",
+							      success: function(data){
+								      var latlng,marker,tout=data.tout,hey,mypopup,icon;
+								      for(var i=0;i<tout.length;i++){
+									      hey=tout[i];
+                                                                              mypopup = L.popup();
+									      latlng={
+										          "lat": Number(hey.lat),
+										          "lng": Number(hey.lon) 
+									      };
+									      console.log(latlng);
+	                                                                      popup
+	                                                                          .setLatLng(latlng)
+	                                                                          .setContent("ça apparait sur la carte à " + latlng.lat+" "+latlng.lng)
+	                                                                          .openOn(macarte);
+									      icon=new LeafIcon({iconUrl: "/mypic/"+hey.stuff+".png"});
+	                                                                      mymarker = L.marker(latlng, {icon: icon}).bindPopup(popup).addTo(macarte)
+								      }
+							      }
+						      });
 }
                                                                                                                                                                                                                   });
