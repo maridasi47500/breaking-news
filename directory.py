@@ -97,7 +97,7 @@ class Directory():
         print("session : : ",mysession)
         if not mysession["mysession"]:
             self.session["notice"]=""
-        if (not mysession or (not mysession["email"] and not mysession["name"])) and self.url != "/" and not self.redirect:
+        if (not mysession or (not mysession["email"] and not mysession["name"])) and self.url not in ["/","/voirtoutcequejaiajoute"] and not self.redirect:
             print("ok not loged in")
             redi="/"
             self.redirect=redi

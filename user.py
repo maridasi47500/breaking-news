@@ -37,7 +37,7 @@ class User(Model):
         else:
             return {"notice":"","name":"","email": ""}
     def getall(self):
-        self.cur.execute("select * from users")
+        self.cur.execute("select *, 'user' as stuff from users")
         
         row=self.cur.fetchall()
         return row

@@ -48,4 +48,6 @@ var theme = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
 
                                                                                                                                                                                                       $(document).ready(function(){
                                                                                                                                                                                                               initMap();
+                                              if (window.location.href==="/"){
+}
                                                                                                                                                                                                                   });

@@ -1,0 +1,4 @@
+{"tout":[
+<%=render_collection(collection=params['tout'], partial='welcome/_stuff.json', as_='stuff')%>
+]
+}

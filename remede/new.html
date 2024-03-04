@@ -1,8 +1,8 @@
 <h1>ajouter 1 remede</h1>
 <form action="/createremede" method="post">
 	<div class="field">
-		<label for="nom">nom</label>
-		<textarea name="nom" id="name"></textarea>
+		<label for="text">nom</label>
+		<textarea name="text" id="name"></textarea>
 	</div>
 	<div class="field">
 		<label for="lat">latitude</label>
@@ -11,6 +11,10 @@
 	<div class="field">
 		<label for="lon">longitude</label>
 		<input type="text" name="lon" id="lon"/>
+	</div>
+	<div class="field">
+		<label for="image">longitude</label>
+		<input type="file" name="image" id="image"/>
 	</div>
 	<div class="action">
 		<input type="submit" value="submit" name="submit"/>

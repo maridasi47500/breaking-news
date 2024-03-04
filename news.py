@@ -9,10 +9,14 @@ class News(Model):
         self.cur=self.con.cursor()
         self.cur.execute("""create table if not exists news(
         id integer primary key autoincrement,
-        content text);""")
+        text text,
+        lat text,
+        lon text,
+        image text
+);""")
         self.con.commit()
     def getall(self):
-        self.cur.execute("select * from news")
+        self.cur.execute("select *, 'news' as stuff from news")
         row=self.cur.fetchall()
         return row
     def deletebyid(self,myid):
@@ -47,7 +51,7 @@ class News(Model):
         print("CECI EST MON H A SH")
         print(myhash)
         try:
-          self.cur.execute("insert into news (content) values (:content)",myhash)
+          self.cur.execute("insert into news (text,lat,lon,image) values (:text,:lat,:lon,:image)",myhash)
           self.con.commit()
         except Exception as e:
           print("my error"+str(e))

@@ -1,8 +1,8 @@
 <h1>ecrire 1 breaking news</h1>
 <form action="/createnew" method="post">
 	<div class="field">
-		<label for="content">content</label>
-		<textarea name="content" id="content"></textarea>
+		<label for="text">content</label>
+		<textarea name="text" id="text"></textarea>
 	</div>
 	<div class="field">
 		<label for="lat">latitude</label>
@@ -11,6 +11,10 @@
 	<div class="field">
 		<label for="lon">longitude</label>
 		<input type="text" name="lon" id="lon"/>
+	</div>
+	<div class="field">
+		<label for="image">image</label>
+		<input type="file" name="image" id="image"/>
 	</div>
 	<div class="action">
 		<input type="submit" value="submit" name="submit"/>

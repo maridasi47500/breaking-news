@@ -10,7 +10,7 @@ class Remedes(Model):
         self.cur=self.con.cursor()
         self.cur.execute("""create table if not exists remedes(
         id integer primary key autoincrement,
-        nom text,
+        text text,
         lat text,
         lon text,
             image text
@@ -18,7 +18,7 @@ class Remedes(Model):
         self.con.commit()
         #self.con.close()
     def getall(self):
-        self.cur.execute("select * from remedes")
+        self.cur.execute("select *, 'remede' as stuff from remedes")
 
         row=self.cur.fetchall()
         return row
@@ -52,7 +52,7 @@ class Remedes(Model):
         print(myhash,myhash.keys())
         myid=None
         try:
-          self.cur.execute("insert into remedes (nom,lat,lon) values (:nom,:lat,:lon)",myhash)
+          self.cur.execute("insert into remedes (text,lat,lon,image) values (:text,:lat,:lon,:image)",myhash)
           self.con.commit()
           myid=str(self.cur.lastrowid)
         except Exception as e:

@@ -1,4 +1,5 @@
 from directory import Directory
+from fichier import Fichier
 from render_figure import RenderFigure
 from user import User
 from news import News
@@ -30,6 +31,9 @@ class Route():
     def set_redirect(self,x):
           self.Program.set_redirect(x)
           self.render_figure.set_redirect(self.Program.get_redirect())
+    def render_json(self,x,y):
+          self.Program.set_json(Fichier(("./"+x),y).lire())
+          return self.render_figure.render_my_json(self.Program.get_json())
     def set_json(self,x):
           self.Program.set_json(x)
           self.render_figure.set_json(self.Program.get_json())
@@ -75,7 +79,8 @@ class Route():
     def new(self,search={}):
         return self.render_figure.render_figure("news/new.html")
     def createnew(self,params={}):
-        myparams=self.get_post_data()(params=("content",))
+        myparams=self.get_post_data()(params=("text","lat","lon","image",))
+
         self.user=self.dbNews.create(myparams)
         if self.user["news_id"]:
           self.set_notice(self.user["notice"])
@@ -100,7 +105,7 @@ class Route():
     def newremede(self,search={}):
         return self.render_figure.render_figure("remede/new.html")
     def createremede(self,params={}):
-        myparams=self.get_post_data()(params=("nom","lat","lon",))
+        myparams=self.get_post_data()(params=("image","text","lat","lon",))
         self.user=self.dbRemedes.create(myparams)
         if self.user["remede_id"]:
           self.set_notice(self.user["notice"])
@@ -177,6 +182,14 @@ class Route():
           return self.render_figure.render_json()
     def data_reach(self,search):
         return self.render_figure.render_figure("welcome/datareach.html")
+    def voirtoutcequejaiajoute(self,data):
+
+        print("tout")
+        tout=self.dbNews.getall()+self.dbStorage.getall()
+        print("tout")
+        print(tout,"tout")
+        self.render_figure.set_param("tout",tout)
+        return self.render_json("welcome","hey.json")
     def run(self,redirect=False,redirect_path=False,path=False,session=False,params={},url=False,post_data=False):
         if post_data:
             self.set_post_data(post_data)
@@ -203,6 +216,7 @@ class Route():
         elif path:
             print("link route ",path)
             ROUTES={
+                    "^/voirtoutcequejaiajoute$":self.voirtoutcequejaiajoute,
                     "^/newremede$":self.newremede,
                     "^/createremede$":self.createremede,
                     "^/seemyremede/([0-9]+)$":self.showremede,
@@ -235,15 +249,15 @@ class Route():
                x=(re.match(route,path))
                print(True if x else False)
                if x:
-                   params["routeparams"]=x.groups()
-                   try:
-                       self.Program.set_html(html=mycase(params))
-
-
-                   except Exception:  
-                       self.Program.set_html(html="<p>une erreur s'est produite "+str(traceback.format_exc())+"</p><a href=\"/\">retour à l'accueil</a>")
-                   self.Program.redirect_if_not_logged_in()
-                   return self.Program
+                    params["routeparams"]=x.groups()
+                    try:
+                        html=mycase(params)
+                    except Exception as e:
+                        print("erreur"+str(e),traceback.format_exc())
+                        html=("<p>une erreur s'est produite dans le code server  "+(traceback.format_exc())+"</p><a href=\"/\">retour à l'accueil</a>").encode("utf-8")
+                        print(html)
+                    self.Program.set_html(html=html)
+                    return self.Program
                else:
-                   self.Program.set_html(html="<p>la page n'a pas été trouvée</p><a href=\"/\">retour à l'accueil</a>")
+                    self.Program.set_html(html="<p>la page n'a pas été trouvée</p><a href=\"/\">retour à l'accueil</a>")
         return self.Program

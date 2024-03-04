@@ -1,0 +1,6 @@
+<%="," if paspremier else ""%>{
+"lat":"<%=stuff["lat"]%>",
+"lon":"<%=stuff["lon"]%>",
+"stuff":"<%=stuff["stuff"]%>",
+"content":"<%=stuff["text"]%>"
+}

@@ -9,13 +9,15 @@ class Storage(Model):
         self.cur=self.con.cursor()
         self.cur.execute("""create table if not exists storages(
         id integer primary key autoincrement,
-        name text,
-        description text
+        text text,
+        image text,
+        lat text,
+        lon text
                 );""")
         self.con.commit()
         #self.con.close()
     def getall(self):
-        self.cur.execute("select * from storages")
+        self.cur.execute("select *, 'storage' as stuff from storages")
         
         row=self.cur.fetchall()
         return row
@@ -48,7 +50,7 @@ class Storage(Model):
         print(myhash,myhash.keys())
         myid=None
         try:
-          self.cur.execute("insert into storages (name,description) values (:name,:description)",myhash)
+          self.cur.execute("insert into storages (text,image,lat,lon) values (:text,:image,:lat,:lon)",myhash)
           self.con.commit()
           myid=str(self.cur.lastrowid)
         except Exception as e:
