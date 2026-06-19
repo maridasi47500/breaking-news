@@ -122,8 +122,8 @@ class Route():
         self.render_figure.set_param("remede",self.dbRemedes.getbyid(myparam["id"]))
         return self.render_figure.render_figure("remede/show.html")
     def allremedes(self,params={}):
-        self.render_figure.set_param("mystorages",self.dbStorage.getall())
-        return self.render_figure.render_figure("data/all.html")
+        self.render_figure.set_param("remedes",self.dbRemedes.getall())
+        return self.render_figure.render_figure("remede/seeall.html")
     def seestorage(self,params={}):
         print("action see my new")
         getparams=("id",)

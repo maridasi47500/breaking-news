@@ -59,25 +59,29 @@ const LeafIcon = L.Icon.extend({
 
                                                                                                                                                                                                       $(document).ready(function(){
                                                                                                                                                                                                               initMap();
-                                              if (window.location.pathname==="/"){
+                                              if (window.location.pathname==="/" || window.location.pathname==="/alldatastorage" || window.location.pathname==="/allremedes" || window.location.pathname==="/allmynews"){
 						      $.ajax({
 							      url:"/voirtoutcequejaiajoute",
 							      success: function(data){
-								      var latlng,marker,tout=data.tout,hey,mypopup,icon;
+								      var latlng,marker,tout=data.tout,hey,mypopup={},icon;
 								      for(var i=0;i<tout.length;i++){
 									      hey=tout[i];
-                                                                              mypopup = L.popup();
+ if ((window.location.pathname==="/alldatastorage" && hey.stuff !== "storage") || (window.location.pathname==="/allremedes" && hey.stuff !== "remede") || (window.location.pathname==="/allmynews" && hey.stuff !== "news")){
+    continue;
+ }
+
+                                                                              mypopup[i] = L.popup();
 									      latlng={
 										          "lat": Number(hey.lat),
 										          "lng": Number(hey.lon) 
 									      };
 									      console.log(latlng);
-	                                                                      popup
+	                                                                      mypopup[i]
 	                                                                          .setLatLng(latlng)
-	                                                                          .setContent("ça apparait sur la carte à " + latlng.lat+" "+latlng.lng)
+	                                                                          .setContent("1 "+hey.stuff+" apparait sur la carte a " + latlng.lat+" "+latlng.lng+"("+hey.content+")")
 	                                                                          .openOn(macarte);
 									      icon=new LeafIcon({iconUrl: "/mypic/"+hey.stuff+".png"});
-	                                                                      mymarker = L.marker(latlng, {icon: icon}).bindPopup(popup).addTo(macarte)
+	                                                                      mymarker = L.marker(latlng, {icon: icon}).bindPopup(mypopup[i]).addTo(macarte)
 								      }
 							      }
 						      });
